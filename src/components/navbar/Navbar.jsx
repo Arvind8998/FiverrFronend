@@ -25,9 +25,9 @@ function Navbar() {
 
   const currentUser = getLocalStorage("currentUser");
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      newRequest.post("/auth/logout");
+      await newRequest.post("/auth/logout");
       setLocalStorage("currentUser", null);
       navigate("/");
     } catch (e) {
@@ -79,7 +79,7 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <span to="/login">Sign in</span>
+              <span onClick={() => navigate("/login")}>Sign in</span>
               <Link className="link" to="/register">
                 <button>Join</button>
               </Link>
