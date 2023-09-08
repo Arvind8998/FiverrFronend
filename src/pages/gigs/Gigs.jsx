@@ -9,11 +9,7 @@ import { useQuery } from "react-query";
 function Gigs() {
   const { search } = useLocation();
   const { isLoading, error, data, refetch } = useQuery("repoData", () =>
-    newRequest
-      .get(
-        `/gigs${search}?min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`
-      )
-      .then((res) => res.json())
+    newRequest.get(`/gigs${search}`).then((res) => res.json())
   );
 
   const [sort, setSort] = useState("sales");

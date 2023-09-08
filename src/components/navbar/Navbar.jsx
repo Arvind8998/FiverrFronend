@@ -79,7 +79,9 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <span onClick={() => navigate("/login")}>Sign in</span>
+              <Link className="link" onClick={() => navigate("/login")}>
+                Sign in
+              </Link>
               <Link className="link" to="/register">
                 <button>Join</button>
               </Link>
