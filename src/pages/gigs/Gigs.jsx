@@ -2,8 +2,20 @@ import React, { useRef, useState } from "react";
 import "./Gigs.scss";
 import { gigs } from "../../data";
 import GigCard from "../../components/gigCard/GigCard";
+import newRequest from "../../utils/newRequest";
+import { useLocation } from "react-router-dom";
+import { useQuery } from "react-query";
 
 function Gigs() {
+  const { search } = useLocation();
+  const { isLoading, error, data, refetch } = useQuery("repoData", () =>
+    newRequest
+      .get(
+        `/gigs${search}?min=${minRef.current.value}&max=${maxRef.current.value}&sort=${sort}`
+      )
+      .then((res) => res.json())
+  );
+
   const [sort, setSort] = useState("sales");
   const [open, setOpen] = useState(false);
   const minRef = useRef();
@@ -14,10 +26,9 @@ function Gigs() {
     setOpen(false);
   };
 
-  const apply = ()=>{
-    console.log(minRef.current.value)
-    console.log(maxRef.current.value)
-  }
+  const apply = () => {
+    refetch();
+  };
 
   return (
     <div className="gigs">
@@ -46,16 +57,18 @@ function Gigs() {
                   <span onClick={() => reSort("createdAt")}>Newest</span>
                 ) : (
                   <span onClick={() => reSort("sales")}>Best Selling</span>
-                  )}
-                  <span onClick={() => reSort("sales")}>Popular</span>
+                )}
+                <span onClick={() => reSort("sales")}>Popular</span>
               </div>
             )}
           </div>
         </div>
         <div className="cards">
-          {gigs.map((gig) => (
-            <GigCard key={gig.id} item={gig} />
-          ))}
+          {isLoading
+            ? "loading"
+            : error
+            ? "something went wrong"
+            : gigs.map((gig) => <GigCard key={gig._id} item={gig} />)}
         </div>
       </div>
     </div>
