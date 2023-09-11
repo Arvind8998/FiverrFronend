@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import "./Gigs.scss";
-import { gigs } from "../../data";
 import GigCard from "../../components/gigCard/GigCard";
 import newRequest from "../../utils/newRequest";
 import { useLocation } from "react-router-dom";
@@ -8,9 +7,10 @@ import { useQuery } from "react-query";
 
 function Gigs() {
   const { search } = useLocation();
-  const { isLoading, error, data, refetch } = useQuery("repoData", () =>
-    newRequest.get(`/gigs${search}`).then((res) => res.json())
-  );
+  const { isLoading, error, data, refetch } = useQuery("repoData", async () => {
+    const res = await newRequest.get(`/gigs${search}`);
+    return res.data;
+  });
 
   const [sort, setSort] = useState("sales");
   const [open, setOpen] = useState(false);
@@ -64,7 +64,7 @@ function Gigs() {
             ? "loading"
             : error
             ? "something went wrong"
-            : gigs.map((gig) => <GigCard key={gig._id} item={gig} />)}
+            : data.map((gig) => <GigCard key={gig._id} item={gig} />)}
         </div>
       </div>
     </div>
